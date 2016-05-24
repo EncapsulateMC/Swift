@@ -11,7 +11,16 @@ repositories {
     }
 }
 
+jar {
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
 dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile group: 'net.minecraft', name: 'launchwrapper', version: '1.11'
+    compile files('libs/server.jar') // obfuscated
 }

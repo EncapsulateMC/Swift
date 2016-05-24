@@ -6,6 +6,7 @@ import org.objectweb.asm.tree.*;
 
 import java.util.Iterator;
 
+import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.RETURN;
 
@@ -53,7 +54,7 @@ public class SwiftASM {
                 MethodInsnNode methodInsnNode = new MethodInsnNode(INVOKESTATIC, injection.ownerClass.getName(), injection.methodName, injection.methodDesc);
                 InsnList insnList = new InsnList();
                 if (shareInstance) {
-                    insnList.add(new VarInsnNode(INVOKESTATIC, 0));
+                    insnList.add(new VarInsnNode(ALOAD, 0));
                 }
                 insnList.add(methodInsnNode);
                 if (this.injectionOrder == Order.BEGIN) {

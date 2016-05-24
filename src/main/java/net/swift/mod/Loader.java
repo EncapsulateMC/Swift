@@ -47,7 +47,8 @@ public class Loader {
                 continue;
             }
         }
-        LOGGER.info("Calling ModStartEvent...");
+        LOGGER.info("Calling ModStartEvent on loaded mods...");
         EVENT_BUS.post(new ModStartEvent());
+        LOGGER.info("SML has finished.");
     }
 }
