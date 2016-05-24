@@ -2,6 +2,7 @@ package net.swift.mod;
 
 import com.google.common.eventbus.EventBus;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import net.swift.event.ModStartEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,5 +47,7 @@ public class Loader {
                 continue;
             }
         }
+        LOGGER.info("Calling ModStartEvent...");
+        EVENT_BUS.post(new ModStartEvent());
     }
 }
