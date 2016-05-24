@@ -3,6 +3,7 @@ package net.swift.mod;
 import com.google.common.eventbus.EventBus;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.swift.event.ModStartEvent;
+import net.swift.event.ModStopEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,6 +50,12 @@ public class Loader {
         }
         LOGGER.info("Calling ModStartEvent on loaded mods...");
         EVENT_BUS.post(new ModStartEvent());
+        LOGGER.info("SML has finished.");
+    }
+
+    public static void callModEndEvent() {
+        LOGGER.info("Shutting down all mods...");
+        EVENT_BUS.post(new ModStopEvent());
         LOGGER.info("SML has finished.");
     }
 }
