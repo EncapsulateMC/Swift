@@ -4,11 +4,16 @@ import com.google.common.eventbus.EventBus;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.swift.event.ModStartEvent;
 import net.swift.event.ModStopEvent;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class Loader {
@@ -37,9 +42,26 @@ public class Loader {
             LOGGER.info("Loading mod " + mod.getName() + "...");
             try {
                 JarFile jarFile = new JarFile(mod);
-                String modClassName = jarFile.getManifest().getMainAttributes().getValue("Mod-Class");
                 ((LaunchClassLoader) Thread.currentThread().getContextClassLoader()).addURL(mod.toURI().toURL());
-                Class<?> modClass = Class.forName(modClassName);
+                Enumeration<JarEntry> entryEnumeration = jarFile.entries();
+                List<Class<?>> candidates = new ArrayList<Class<?>>();
+                while (entryEnumeration.hasMoreElements()) {
+                    JarEntry jarEntry = entryEnumeration.nextElement();
+                    if (jarEntry.getName().endsWith(".class")) {
+                        Class<?> theClass = Thread.currentThread().getContextClassLoader().loadClass(FilenameUtils.removeExtension(jarEntry.getName()).replace('/', '.'));
+                        if (theClass.isAnnotationPresent(Mod.class)) {
+                            candidates.add(theClass);
+                        }
+                    }
+                }
+                if (candidates.size() < 1) {
+                    LOGGER.error("No mod class candidates for mod file " + mod.getName() + "! (" + candidates.size() + ")");
+                    continue;
+                }
+                if (candidates.size() > 1) {
+                    LOGGER.error("Too many candidates for mod class! Using " + candidates.get(0));
+                }
+                Class<?> modClass = candidates.get(0);
                 Object instanceOfMod = modClass.newInstance();
                 EVENT_BUS.register(instanceOfMod);
             } catch (Exception e) {
