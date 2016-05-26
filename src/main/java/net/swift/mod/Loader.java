@@ -27,6 +27,10 @@ public class Loader {
         LOGGER.info("SML v1.0-SNAPSHOT");
         LOGGER.info("Copyrighted 2016 by the Swift Team");
         LOGGER.info("http://pizzacrustrepo.gq");
+        double specificationVersion = Double.parseDouble(System.getProperty("java.specification.version"));
+        if (specificationVersion < 1.8) {
+            LOGGER.warn("Java 8 isn't being used. Please use Java 8 to have better compatibility with newer mods, better performance and security.");
+        }
         LOGGER.info("Searching for mods at " + MODS_DIRECTORY.getAbsolutePath());
         if (!MODS_DIRECTORY.exists()) {
             MODS_DIRECTORY.mkdir();
