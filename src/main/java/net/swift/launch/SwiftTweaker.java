@@ -14,6 +14,7 @@ public class SwiftTweaker implements ITweaker {
     public void injectIntoClassLoader(LaunchClassLoader classLoader) {
         classLoader.registerTransformer(ServerTransformer.class.getName());
         classLoader.registerTransformer(HookTransformer.class.getName());
+        classLoader.registerTransformer(BrandTransformer.class.getName());
         try {
             classLoader.findClass("net.minecraft.server.MinecraftServer");
         } catch (ClassNotFoundException e) {
