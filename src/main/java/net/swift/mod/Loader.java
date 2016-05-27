@@ -21,6 +21,7 @@ public class Loader {
     public static final Logger LOGGER = LogManager.getLogger("SML");
     public static final File MODS_DIRECTORY = new File(System.getProperty("user.dir"), "mods");
     public static final EventBus EVENT_BUS = new EventBus();
+    public static final List<Class<?>> MOD_CLASSES = new ArrayList<Class<?>>();
 
     public static void init(Object instance) {
         MINECRAFT_INSTANCE = instance;
@@ -66,6 +67,7 @@ public class Loader {
                     LOGGER.error("Too many candidates for mod class! Using " + candidates.get(0));
                 }
                 Class<?> modClass = candidates.get(0);
+                MOD_CLASSES.add(modClass);
                 Object instanceOfMod = modClass.newInstance();
                 EVENT_BUS.register(instanceOfMod);
             } catch (Exception e) {
